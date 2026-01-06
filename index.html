@@ -32,8 +32,11 @@
             user-select: none;
             position: relative;
         }
-        .table th:hover {
-            background-color: #495057;
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .table tbody tr:hover {
+            background-color: #e3f2fd;
         }
         .table th.sort-asc::after {
             content: ' ▲';
@@ -99,9 +102,19 @@
     <div class="container table-container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0">Williamson County Sales Leads</h3>
-            <div class="d-flex gap-2">
-                <input type="text" id="searchInput" class="form-control" placeholder="Search leads..." style="width: 250px;">
-                <button id="clearSearch" class="btn btn-outline-secondary">Clear</button>
+            <div class="d-flex gap-2 align-items-center">
+                <div class="d-flex gap-2">
+                    <select id="priceFilter" class="form-select" style="width: 150px;">
+                        <option value="">All Prices</option>
+                        <option value="0-100000">$0 - $100K</option>
+                        <option value="100000-500000">$100K - $500K</option>
+                        <option value="500000-1000000">$500K - $1M</option>
+                        <option value="1000000+">$1M+</option>
+                    </select>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search leads..." style="width: 200px;">
+                    <button id="clearFilters" class="btn btn-outline-secondary">Clear All</button>
+                    <button id="exportBtn" class="btn btn-success">Export CSV</button>
+                </div>
             </div>
         </div>
         <div class="table-responsive">
@@ -162,25 +175,48 @@
                     });
                 });
 
-                // Add search functionality
-                document.getElementById('searchInput').addEventListener('input', filterData);
-                document.getElementById('clearSearch').addEventListener('click', clearSearch);
+                // Add search and filter functionality
+                document.getElementById('searchInput').addEventListener('input', applyFilters);
+                document.getElementById('priceFilter').addEventListener('change', applyFilters);
+                document.getElementById('clearFilters').addEventListener('click', clearAllFilters);
+                document.getElementById('exportBtn').addEventListener('click', exportToCSV);
             })
             .catch(error => console.error('Error loading CSV:', error));
 
-        function filterData() {
+        function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const priceRange = document.getElementById('priceFilter').value;
 
-            if (searchTerm === '') {
-                filteredData = [...allTableData];
-            } else {
-                filteredData = allTableData.filter(row =>
+            filteredData = allTableData.filter(row => {
+                // Search filter
+                const matchesSearch = searchTerm === '' ||
                     row.ownerName.toLowerCase().includes(searchTerm) ||
                     row.address.toLowerCase().includes(searchTerm) ||
                     row.price.toLowerCase().includes(searchTerm) ||
-                    row.soldDate.toLowerCase().includes(searchTerm)
-                );
-            }
+                    row.soldDate.toLowerCase().includes(searchTerm);
+
+                // Price filter
+                let matchesPrice = true;
+                if (priceRange) {
+                    const priceValue = parsePrice(row.price);
+                    switch (priceRange) {
+                        case '0-100000':
+                            matchesPrice = priceValue >= 0 && priceValue <= 100000;
+                            break;
+                        case '100000-500000':
+                            matchesPrice = priceValue > 100000 && priceValue <= 500000;
+                            break;
+                        case '500000-1000000':
+                            matchesPrice = priceValue > 500000 && priceValue <= 1000000;
+                            break;
+                        case '1000000+':
+                            matchesPrice = priceValue > 1000000;
+                            break;
+                    }
+                }
+
+                return matchesSearch && matchesPrice;
+            });
 
             // Re-apply current sort
             if (currentSortColumn >= 0) {
@@ -192,9 +228,43 @@
             }
         }
 
-        function clearSearch() {
+        function clearAllFilters() {
             document.getElementById('searchInput').value = '';
-            filterData();
+            document.getElementById('priceFilter').value = '';
+            applyFilters();
+        }
+
+        function exportToCSV() {
+            if (filteredData.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            // Create CSV content
+            const headers = ['Owner Name', 'Address', 'Price', 'Sold Date', 'Agent Phone'];
+            let csvContent = headers.join(',') + '\n';
+
+            filteredData.forEach(row => {
+                const csvRow = [
+                    `"${row.ownerName}"`,
+                    `"${row.address}"`,
+                    `"${row.price}"`,
+                    `"${row.soldDate}"`,
+                    `"${row.agentPhone}"`
+                ];
+                csvContent += csvRow.join(',') + '\n';
+            });
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `williamson_leads_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderTable() {
