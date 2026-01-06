@@ -169,6 +169,7 @@
                 // Add sorting event listeners
                 document.querySelectorAll('th.sortable').forEach(header => {
                     header.addEventListener('click', () => {
+                        console.log('Header clicked:', header.dataset.column);
                         const column = parseInt(header.dataset.column);
                         const type = header.dataset.type || 'text';
                         sortTable(column, type);
@@ -320,6 +321,7 @@
         }
 
         function sortTable(column, type, shouldRender = true) {
+            console.log('Sorting column:', column, 'type:', type, 'direction:', currentSortDirection);
             // Update sort direction
             if (currentSortColumn === column) {
                 currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -367,6 +369,7 @@
                 return 0;
             });
 
+            console.log('Data sorted, rendering table');
             if (shouldRender) {
                 renderTable();
             }
