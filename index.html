@@ -153,15 +153,19 @@
 
                 // Store data for sorting and filtering
                 allTableData = rows.filter(row => row.trim()).map(row => {
-                    const cols = row.split(',');
+                    // Proper CSV parsing that handles quoted fields
+                    const cols = parseCSVRow(row);
                     return {
-                        ownerName: cols[0] ? cols[0].replace(/"/g, '') : '',
-                        address: cols[1] ? cols[1].replace(/"/g, '') : '',
-                        price: cols[2] ? cols[2].replace(/"/g, '') : '',
-                        soldDate: cols[3] ? cols[3].replace(/"/g, '') : '',
-                        agentPhone: cols[4] ? cols[4].replace(/"/g, '') : ''
+                        ownerName: cols[0] || '',
+                        address: cols[1] || '',
+                        price: cols[2] || '',
+                        soldDate: cols[3] || '',
+                        agentPhone: cols[4] || ''
                     };
                 });
+
+                console.log('Loaded data:', allTableData.length, 'records');
+                console.log('Sample record:', allTableData[0]);
 
                 filteredData = [...allTableData];
                 renderTable();
@@ -183,6 +187,38 @@
                 document.getElementById('exportBtn').addEventListener('click', exportToCSV);
             })
             .catch(error => console.error('Error loading CSV:', error));
+
+        function parseCSVRow(row) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+
+                if (char === '"') {
+                    if (inQuotes && row[i + 1] === '"') {
+                        // Escaped quote
+                        current += '"';
+                        i++; // Skip next quote
+                    } else {
+                        // Toggle quote state
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    // Field separator
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+
+            // Add the last field
+            result.push(current.trim());
+
+            return result;
+        }
 
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
