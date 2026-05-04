@@ -401,7 +401,7 @@
                         price: cols[3] || '',
                         soldDate: cols[4] || '',
                         agentPhone: cols[5] || '',
-                        propertyType: propertyTypeCache[addr] || cols[7] || ''
+                        propertyType: (cols[7] && cols[7] !== 'N/A') ? cols[7] : (propertyTypeCache[addr] && propertyTypeCache[addr] !== 'Unknown' ? propertyTypeCache[addr] : '')
                     };
                 });
 
