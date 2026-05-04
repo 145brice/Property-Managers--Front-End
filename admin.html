@@ -61,6 +61,14 @@
             border-style: dashed; opacity: 0.6;
         }
         .toggle-all:hover { opacity: 1; }
+        .state-group-label {
+            grid-column: 1 / -1;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: #667eea;
+            padding: 6px 0 2px; border-bottom: 1px solid #2a2a4a;
+            margin-top: 4px;
+        }
+        .state-group-label:first-child { margin-top: 0; }
 
         /* Sliders */
         .config-row {
@@ -105,24 +113,21 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">Fresh Cash Leads</a>
+            <a class="navbar-brand fw-bold" href="index.html">Fresh Investor Leads</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="pricing.html">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="counties.html">Browse Counties</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="admin.html">Admin</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Recent Sales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="motivated_sellers.html">Motivated Sellers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="property_type.html">Property Types</a></li>
+                    <li class="nav-item"><a class="nav-link" href="storefront.html">Buy Leads</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="counties.html">Browse Counties</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="admin.html">Sales Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="motivated_sellers_admin.html">Motivated Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="property_type_admin.html">Type Admin</a></li>
                 </ul>
             </div>
         </div>
@@ -154,6 +159,8 @@
         <div class="card-dark">
             <h5>Counties</h5>
             <div class="county-grid">
+
+                <div class="state-group-label">Tennessee</div>
                 <div class="county-toggle active" data-county="Davidson" onclick="toggleCounty(this)">
                     <div class="dot"></div>
                     <div><div class="name">Davidson</div><div class="method">Excel download - padctn.org (~60s)</div></div>
@@ -162,26 +169,39 @@
                     <div class="dot"></div>
                     <div><div class="name">Williamson</div><div class="method">Selenium - williamson-tn.org (~5 min)</div></div>
                 </div>
-                <div class="county-toggle" data-county="Wilson" onclick="toggleCounty(this)">
+                <div class="county-toggle active" data-county="Wilson" onclick="toggleCounty(this)">
                     <div class="dot"></div>
                     <div><div class="name">Wilson</div><div class="method">TN State Portal (~3 min)</div></div>
                 </div>
-                <div class="county-toggle" data-county="Sumner" onclick="toggleCounty(this)">
+                <div class="county-toggle active" data-county="Sumner" onclick="toggleCounty(this)">
                     <div class="dot"></div>
                     <div><div class="name">Sumner</div><div class="method">TN State Portal (~3 min)</div></div>
                 </div>
-                <div class="county-toggle" data-county="Rutherford" onclick="toggleCounty(this)">
+                <div class="county-toggle active" data-county="Rutherford" onclick="toggleCounty(this)">
                     <div class="dot"></div>
                     <div><div class="name">Rutherford</div><div class="method">Name search - slow (~15 min)</div></div>
                 </div>
-                <div class="county-toggle" data-county="Robertson" onclick="toggleCounty(this)">
+                <div class="county-toggle active" data-county="Robertson" onclick="toggleCounty(this)">
                     <div class="dot"></div>
                     <div><div class="name">Robertson</div><div class="method">TN State Portal (~2 min)</div></div>
                 </div>
-                <div class="county-toggle" data-county="Cheatham" onclick="toggleCounty(this)">
+                <div class="county-toggle active" data-county="Cheatham" onclick="toggleCounty(this)">
                     <div class="dot"></div>
                     <div><div class="name">Cheatham</div><div class="method">TN State Portal (~1 min)</div></div>
                 </div>
+
+                <div class="state-group-label">North Carolina</div>
+                <div class="county-toggle active" data-county="Wake" onclick="toggleCounty(this)">
+                    <div class="dot"></div>
+                    <div><div class="name">Wake (Raleigh)</div><div class="method">Excel download - no Selenium (~10s)</div></div>
+                </div>
+
+                <div class="state-group-label">Illinois</div>
+                <div class="county-toggle active" data-county="Cook" onclick="toggleCounty(this)">
+                    <div class="dot"></div>
+                    <div><div class="name">Cook (Chicago)</div><div class="method">Socrata REST API - no Selenium (~25s)</div></div>
+                </div>
+
                 <div class="county-toggle toggle-all" onclick="toggleAll()">
                     <div class="name">Toggle All</div>
                 </div>
@@ -193,32 +213,32 @@
             <h5>Lookback Period</h5>
             <div class="config-row">
                 <label>Davidson</label>
-                <input type="range" id="davidsonDays" min="7" max="180" value="7" oninput="updateVal(this)">
-                <span class="val" id="davidsonDays_val">7 days</span>
+                <input type="range" id="davidsonDays" min="7" max="180" value="30" oninput="updateVal(this)">
+                <span class="val" id="davidsonDays_val">30 days</span>
             </div>
             <div class="config-row">
-                <label>Wilson / Sumner</label>
-                <input type="range" id="wilsonSumnerDays" min="1" max="90" value="7" oninput="updateVal(this)">
-                <span class="val" id="wilsonSumnerDays_val">7 days</span>
+                <label>Wilson / Sumner / Robertson / Cheatham / Wake</label>
+                <input type="range" id="wilsonSumnerDays" min="1" max="90" value="30" oninput="updateVal(this)">
+                <span class="val" id="wilsonSumnerDays_val">30 days</span>
             </div>
             <div class="config-row">
                 <label>Williamson</label>
-                <input type="range" id="williamsonDays" min="7" max="365" value="7" oninput="updateVal(this)">
-                <span class="val" id="williamsonDays_val">7 days</span>
+                <input type="range" id="williamsonDays" min="7" max="365" value="30" oninput="updateVal(this)">
+                <span class="val" id="williamsonDays_val">30 days</span>
             </div>
 
             <hr>
 
             <h5>Price Filter</h5>
             <div class="config-row">
-                <label>Min Price</label>
-                <input type="range" id="minPrice" min="0" max="1000000" step="25000" value="150000" oninput="updatePrice(this)">
-                <span class="val" id="minPrice_val">$150K</span>
+                <label>Min ($)</label>
+                <input type="range" id="minPrice" min="0" max="1000000" step="25000" value="0" oninput="updatePrice(this)">
+                <span class="val" id="minPrice_val">$0</span>
             </div>
             <div class="config-row">
-                <label>Max Price</label>
-                <input type="range" id="maxPrice" min="500000" max="5000000" step="50000" value="1500000" oninput="updatePrice(this)">
-                <span class="val" id="maxPrice_val">$1.5M</span>
+                <label>Max ($)</label>
+                <input type="range" id="maxPrice" min="0" max="5000000" step="50000" value="850000" oninput="updatePrice(this)">
+                <span class="val" id="maxPrice_val">$850K</span>
             </div>
         </div>
 

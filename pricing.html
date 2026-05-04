@@ -107,57 +107,57 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">Fresh Cash Leads</a>
+            <a class="navbar-brand fw-bold" href="index.html">Fresh Investor Leads</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="pricing.html">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="counties.html">Browse Counties</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Recent Sales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="motivated_sellers.html">Motivated Sellers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="property_type.html">Property Types</a></li>
+                    <li class="nav-item"><a class="nav-link" href="storefront.html">Buy Leads</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="pricing.html">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="counties.html">Browse Counties</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin.html">Sales Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="motivated_sellers_admin.html">Motivated Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="property_type_admin.html">Type Admin</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="header">
-        <h1>Williamson County Property Leads</h1>
-        <p class="lead mb-3">Fresh daily leads from Williamson County, TN public records</p>
+        <h1>Nashville Metro Property Leads</h1>
+        <p class="lead mb-3">Fresh daily leads from 7 counties &mdash; Davidson, Williamson, Wilson, Sumner, Rutherford, Robertson &amp; Cheatham</p>
         <p style="font-size: 0.95rem; color: rgba(255,255,255,0.95); margin-bottom: 0;">
-            Daily updated property sales data - $79/month
+            One flat monthly subscription &mdash; $99/month
         </p>
     </div>
 
     <div class="container my-5">
         <div class="row justify-content-center">
-            <!-- Beta Member Plan (Featured) -->
+            <!-- All Counties Plan (Featured) -->
             <div class="col-md-6">
                 <div class="pricing-card featured">
-                    <div class="featured-badge">WILLIAMSON COUNTY ACCESS</div>
+                    <div class="featured-badge">ALL 7 COUNTIES INCLUDED</div>
                     <h3 class="text-center">Property Leads Subscription</h3>
                     <div class="price text-center">
-                        $79<span class="price-period">/mo</span>
+                        $99<span class="price-period">/mo</span>
                     </div>
-                    <p class="text-center text-muted"><small>Month-to-month • Cancel anytime</small></p>
+                    <p class="text-center text-muted"><small>Month-to-month &bull; Cancel anytime</small></p>
                     <ul class="feature-list">
-                        <li>Unlimited leads from Williamson County, TN</li>
-                        <li>Daily data updates from public records</li>
-                        <li>Property sales, owner/buyer information</li>
-                        <li>Warranty deed filtering</li>
-                        <li>Advanced search & filtering</li>
-                        <li>CSV export</li>
+                        <li>All 7 Nashville-metro counties</li>
+                        <li>Fresh daily data pulls from public records</li>
+                        <li>Property sales, owner &amp; buyer information</li>
+                        <li>Sale price, date &amp; full address on every lead</li>
+                        <li>Advanced search &amp; filtering</li>
+                        <li>Unlimited CSV exports</li>
                         <li>Owner contact lookup</li>
                         <li>Email support</li>
                     </ul>
-                    <button class="btn btn-purchase" onclick="showMockCheckout('Williamson County Leads', 79)">Get Access Now</button>
-                    <p class="text-center mt-3"><small>7-day free trial available</small></p>
+                    <button class="btn btn-purchase" onclick="startCheckout()">Get Access Now &mdash; $99/mo</button>
+                    <p class="text-center mt-3"><small>No contracts &bull; Cancel anytime</small></p>
                 </div>
             </div>
         </div>
@@ -167,130 +167,70 @@
             <h2 class="text-center mb-4">Frequently Asked Questions</h2>
 
             <div class="faq-item">
-                <div class="faq-question">What data do you provide for Williamson County?</div>
-                <div class="faq-answer">We provide fresh property sales leads from Williamson County, TN Register of Deeds. Data includes property addresses, sale prices, buyer/seller names, and transaction dates - all scraped daily from public records.</div>
+                <div class="faq-question">What counties are included?</div>
+                <div class="faq-answer">All 7 Nashville-metro counties: Davidson, Williamson, Wilson, Sumner, Rutherford, Robertson, and Cheatham. One subscription unlocks all of them.</div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question">How often is the data updated?</div>
-                <div class="faq-answer">Data is updated daily from Williamson County's public records system. You'll receive the latest property transactions as they're recorded.</div>
+                <div class="faq-answer">Data is pulled fresh daily from each county's public records system. You'll see the latest property transactions as they're recorded.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What data fields are included on each lead?</div>
+                <div class="faq-answer">Every lead includes: owner/buyer name, full property address, sale price, sale date, and agent phone number where available.</div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question">Can I cancel anytime?</div>
-                <div class="faq-answer">Yes! The subscription is month-to-month with no long-term contracts. You can cancel at any time from your account dashboard.</div>
-            </div>
-
-            <div class="faq-item">
-                <div class="faq-question">Do you offer a free trial?</div>
-                <div class="faq-answer">Yes! All new users get a 7-day free trial with full access to Williamson County leads. No credit card required to start.</div>
+                <div class="faq-answer">Yes. The subscription is month-to-month with no long-term contracts. Cancel anytime from your account.</div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question">What payment methods do you accept?</div>
-                <div class="faq-answer">We accept all major credit cards (Visa, MasterCard, American Express, Discover).</div>
+                <div class="faq-answer">We accept all major credit cards (Visa, MasterCard, American Express, Discover) via Stripe.</div>
             </div>
         </div>
     </div>
 
-    <!-- Mock Checkout Modal -->
-    <div class="modal fade" id="mockCheckoutModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Mock Checkout - Demo Only</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info">
-                        <strong>Demo Mode:</strong> This is a mock checkout for demonstration purposes. No real payment processing occurs.
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h6>Mock Billing Information</h6>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" value="demo@example.com" readonly>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" value="John" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" value="Doe" readonly>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Card Number</label>
-                                <input type="text" class="form-control" value="**** **** **** 4242" readonly>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Expiration</label>
-                                    <input type="text" class="form-control" value="12/25" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">CVV</label>
-                                    <input type="text" class="form-control" value="***" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Order Summary</h6>
-                                    <hr>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span id="mockPlanName">Williamson County Leads Plan</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <span>Monthly subscription</span>
-                                        <strong id="mockPlanPrice">$79.00</strong>
-                                    </div>
-                                    <hr>
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <strong>Total due today</strong>
-                                        <strong id="mockTotalPrice">$79.00</strong>
-                                    </div>
-                                    <small class="text-muted">
-                                        Your subscription will renew automatically each month. Cancel anytime.
-                                        <strong class="text-success">Beta price locked forever!</strong>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="completeMockPurchase()">Complete Mock Purchase</button>
-                </div>
-            </div>
+    <!-- Checkout loading overlay -->
+    <div id="checkoutOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:2rem; border-radius:10px; text-align:center;">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="mb-0 fw-bold">Redirecting to Stripe Checkout...</p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function showMockCheckout(plan, price) {
-            document.getElementById('mockPlanName').textContent = plan + ' Plan';
-            document.getElementById('mockPlanPrice').textContent = '$' + price + '.00';
-            document.getElementById('mockTotalPrice').textContent = '$' + price + '.00';
+        async function startCheckout() {
+            const overlay = document.getElementById('checkoutOverlay');
+            overlay.style.display = 'flex';
 
-            const modal = new bootstrap.Modal(document.getElementById('mockCheckoutModal'));
-            modal.show();
-        }
+            try {
+                const response = await fetch('/api/create-subscription-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
 
-        function completeMockPurchase() {
-            alert('Mock Purchase Completed!\n\nThank you for your demo purchase. In a real application, this would process payment and redirect to the dashboard.\n\nRedirecting to dashboard...');
+                if (data.error) {
+                    alert('Checkout error: ' + data.error);
+                    overlay.style.display = 'none';
+                    return;
+                }
 
-            const modal = bootstrap.Modal.getInstance(document.getElementById('mockCheckoutModal'));
-            modal.hide();
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    alert('Could not create checkout session. Please try again.');
+                    overlay.style.display = 'none';
+                }
+            } catch (err) {
+                alert('Could not connect to the server. Make sure the back-end is running.');
+                overlay.style.display = 'none';
+            }
         }
     </script>
 </body>

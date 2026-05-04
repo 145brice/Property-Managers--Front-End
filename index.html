@@ -57,7 +57,26 @@
         .nav-tabs {
             border-bottom: 2px solid #dee2e6;
             gap: 0.25rem;
+            align-items: center;
         }
+        .tab-state-sep {
+            display: flex;
+            align-items: center;
+            padding: 0 0.25rem;
+        }
+        .tab-state-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #adb5bd;
+            padding: 0 0.4rem;
+            border-left: 2px solid #dee2e6;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .county-tab-wake.active  { background-color: #0891b2 !important; }
+        .county-tab-cook.active  { background-color: #059669 !important; }
         .table th {
             background-color: #343a40;
             color: white;
@@ -87,6 +106,20 @@
         .table td {
             vertical-align: middle;
         }
+        .prop-type-badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .prop-type-single-family   { background: #d1ecf1; color: #0c5460; }
+        .prop-type-multi-family    { background: #fff3cd; color: #856404; }
+        .prop-type-condo-townhouse { background: #d4edda; color: #155724; }
+        .prop-type-commercial      { background: #f8d7da; color: #721c24; }
+        .prop-type-vacant-land     { background: #e2e3e5; color: #383d41; }
+        .prop-type-other           { background: #e8e8e8; color: #555; }
         .sold-badge {
             background-color: #dc3545;
             color: white;
@@ -116,30 +149,130 @@
             color: #6c757d;
         }
         .empty-tab h5 { margin-bottom: 0.5rem; }
+        .mt-2.text-muted {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .pagination-controls button {
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: #e9ecef;
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .pagination-controls button.active-page {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        /* Investor signal filter bar */
+        .signal-filter-bar {
+            background: #f8f4ff;
+            border: 1px solid #d8ccf5;
+            border-radius: 8px;
+            padding: 0.65rem 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem 1.25rem;
+        }
+        .signal-filter-bar .bar-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #764ba2;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+            margin-right: 0.25rem;
+        }
+        .signal-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            border: 1.5px solid #d0c4f0;
+            background: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .signal-chip input[type=checkbox] { display: none; }
+        .signal-chip:hover { border-color: #764ba2; color: #764ba2; }
+        .signal-chip.active {
+            background: #764ba2;
+            border-color: #764ba2;
+            color: white;
+        }
+        .signal-chip .chip-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: currentColor; flex-shrink: 0;
+        }
+        .signal-badge {
+            display: inline-block;
+            padding: 0.15rem 0.45rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            margin-left: 0.25rem;
+        }
+        .signal-llc      { background: #e8d5ff; color: #5b21b6; }
+        .signal-trust    { background: #dbeafe; color: #1e40af; }
+        .signal-multi    { background: #fef3c7; color: #92400e; }
+        .signal-investor { background: #fee2e2; color: #991b1b; }
+        .page-size-select {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">Fresh Cash Leads</a>
+            <a class="navbar-brand fw-bold" href="index.html">Fresh Investor Leads</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin.html">Admin</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Recent Sales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="motivated_sellers.html">Motivated Sellers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="property_type.html">Property Types</a></li>
+                    <li class="nav-item"><a class="nav-link" href="storefront.html">Buy Leads</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="counties.html">Browse Counties</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin.html">Sales Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="motivated_sellers_admin.html">Motivated Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="property_type_admin.html">Type Admin</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="header">
-        <h1>Fresh Cash Leads Dashboard</h1>
+        <h1>Fresh Investor Leads Dashboard</h1>
         <p>Nashville Metro Area - 7 Counties</p>
     </div>
 
@@ -149,10 +282,37 @@
             <!-- Tabs are generated dynamically -->
         </ul>
 
+        <!-- Investor Signal Filters -->
+        <div class="signal-filter-bar">
+            <span class="bar-label">Show only:</span>
+            <label class="signal-chip" id="chip-llc" onclick="toggleSignal('llc')">
+                <span class="chip-dot"></span> LLC / Corp / Inc
+            </label>
+            <label class="signal-chip" id="chip-trust" onclick="toggleSignal('trust')">
+                <span class="chip-dot"></span> Trust / Estate
+            </label>
+            <label class="signal-chip" id="chip-multi" onclick="toggleSignal('multi')">
+                <span class="chip-dot"></span> Multi-Unit
+            </label>
+            <label class="signal-chip" id="chip-investor" onclick="toggleSignal('investor')">
+                <span class="chip-dot"></span> Investor Keywords
+            </label>
+            <span style="font-size:0.75rem;color:#888;margin-left:auto;">Multiple selections = OR</span>
+        </div>
+
         <!-- Toolbar -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="stats-bar flex-grow-1" id="statsBar"></div>
             <div class="d-flex gap-2 ms-3">
+                <select id="typeFilter" class="form-select form-select-sm" style="width: 155px;">
+                    <option value="">All Property Types</option>
+                    <option value="Single Family">Single Family</option>
+                    <option value="Multi-Family">Multi-Family</option>
+                    <option value="Condo/Townhouse">Condo/Townhouse</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Vacant Land">Vacant Land</option>
+                    <option value="Other">Other</option>
+                </select>
                 <select id="priceFilter" class="form-select form-select-sm" style="width: 150px;">
                     <option value="">All Prices</option>
                     <option value="0-100000">$0 - $100K</option>
@@ -174,22 +334,44 @@
                         <th data-column="1" class="sortable">Address</th>
                         <th data-column="2" data-type="price" class="sortable">Price</th>
                         <th data-column="3" data-type="date" class="sortable">Sold Date</th>
-                        <th data-column="4">Agent Phone</th>
+                        <th data-column="4" class="sortable">Property Type</th>
+                        <th data-column="5">Agent Phone</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
         <div class="mt-2 text-muted">
-            <small>Showing <span id="recordCount">0</span> records</small>
+            <div>
+                <small>Showing <span id="recordCount">0</span> of <span id="totalCount">0</span> records</small>
+            </div>
+            <div class="pagination-controls">
+                <small class="me-2">Per page:</small>
+                <select id="pageSize" class="page-size-select" onchange="changePageSize()">
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+                <button id="prevPage" onclick="changePage(-1)">← Prev</button>
+                <span id="pageInfo" class="small">Page 1</span>
+                <button id="nextPage" onclick="changePage(1)">Next →</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const COUNTIES = ['Davidson', 'Williamson', 'Wilson', 'Sumner', 'Rutherford', 'Robertson', 'Cheatham'];
+        const STATE_GROUPS = [
+            { state: 'Tennessee', abbr: 'TN', counties: ['Davidson', 'Williamson', 'Wilson', 'Sumner', 'Rutherford', 'Robertson', 'Cheatham'] },
+            { state: 'North Carolina', abbr: 'NC', counties: ['Wake'] },
+            { state: 'Illinois', abbr: 'IL', counties: ['Cook'] },
+        ];
+        const COUNTIES = STATE_GROUPS.flatMap(g => g.counties);
+        const COUNTY_STATE = {};
+        STATE_GROUPS.forEach(g => g.counties.forEach(c => COUNTY_STATE[c] = g.abbr));
         const COUNTY_COLORS = {
             Davidson: '#0d6efd', Williamson: '#6f42c1', Wilson: '#198754',
-            Sumner: '#fd7e14', Rutherford: '#dc3545', Robertson: '#20c997', Cheatham: '#6610f2'
+            Sumner: '#fd7e14', Rutherford: '#dc3545', Robertson: '#20c997', Cheatham: '#6610f2',
+            Wake: '#0891b2', Cook: '#059669'
         };
 
         let allData = [];          // every row from CSV
@@ -198,6 +380,8 @@
         let filteredData = [];     // what's shown in table
         let currentSortColumn = -1;
         let currentSortDirection = 'asc';
+        let currentPage = 1;
+        let pageSize = 50;
 
         // ---- Load CSV ----
         fetch('nashville_cash_leads_clean.csv')
@@ -212,7 +396,8 @@
                         address: cols[2] || '',
                         price: cols[3] || '',
                         soldDate: cols[4] || '',
-                        agentPhone: cols[5] || ''
+                        agentPhone: cols[5] || '',
+                        propertyType: cols[7] || 'N/A'
                     };
                 });
 
@@ -237,23 +422,30 @@
             let html = '';
 
             // "All" tab
-            const totalCount = allData.length;
             html += `<li class="nav-item" role="presentation">
                 <button class="nav-link county-tab-all active" data-county="all" type="button" role="tab">
-                    All <span class="badge bg-secondary">${totalCount}</span>
+                    All <span class="badge bg-secondary">${allData.length}</span>
                 </button>
             </li>`;
 
-            // Per-county tabs (only show counties that have data)
-            COUNTIES.forEach(county => {
-                const count = countyData[county].length;
-                if (count === 0) return;
-                const tabClass = 'county-tab-' + county.toLowerCase();
-                html += `<li class="nav-item" role="presentation">
-                    <button class="nav-link ${tabClass}" data-county="${county}" type="button" role="tab">
-                        ${county} <span class="badge bg-secondary">${count}</span>
-                    </button>
+            // Per-state groups with separator labels
+            STATE_GROUPS.forEach(group => {
+                const groupCounties = group.counties.filter(c => (countyData[c] || []).length > 0);
+                if (groupCounties.length === 0) return;
+
+                html += `<li class="nav-item tab-state-sep" role="presentation">
+                    <span class="tab-state-label">${group.state}</span>
                 </li>`;
+
+                groupCounties.forEach(county => {
+                    const count = countyData[county].length;
+                    const tabClass = 'county-tab-' + county.toLowerCase();
+                    html += `<li class="nav-item" role="presentation">
+                        <button class="nav-link ${tabClass}" data-county="${county}" type="button" role="tab">
+                            ${county} <span class="badge bg-secondary">${count}</span>
+                        </button>
+                    </li>`;
+                });
             });
 
             tabContainer.innerHTML = html;
@@ -273,48 +465,115 @@
             activeCounty = county;
             currentSortColumn = -1;
             currentSortDirection = 'asc';
+            currentPage = 1;
             document.querySelectorAll('th.sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
             document.getElementById('searchInput').value = '';
             document.getElementById('priceFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            activeSignals.clear();
+            ['llc','trust','multi','investor'].forEach(k => document.getElementById('chip-'+k).classList.remove('active'));
             applyFilters();
-            updateStats();
         }
 
         // ---- Stats bar ----
+        // Called after every filter/tab change with the current filtered set
         function updateStats() {
-            const data = activeCounty === 'all' ? allData : countyData[activeCounty] || [];
+            const tabData = activeCounty === 'all' ? allData : countyData[activeCounty] || [];
             const bar = document.getElementById('statsBar');
-            if (data.length === 0) {
+            if (tabData.length === 0) {
                 bar.innerHTML = '<span class="stat-item">No data available</span>';
                 return;
             }
 
-            const prices = data.map(r => parsePrice(r.price)).filter(p => p > 0);
+            const isFiltered = filteredData.length !== tabData.length;
+            const displayData = filteredData;
+
+            const prices = displayData.map(r => parsePrice(r.price)).filter(p => p > 0);
             const avgPrice = prices.length ? prices.reduce((a, b) => a + b, 0) / prices.length : 0;
             const minPrice = prices.length ? Math.min(...prices) : 0;
             const maxPrice = prices.length ? Math.max(...prices) : 0;
 
-            // Date range
-            const dates = data.map(r => new Date(r.soldDate)).filter(d => !isNaN(d));
+            const dates = displayData.map(r => new Date(r.soldDate)).filter(d => !isNaN(d));
             let dateRange = '';
             if (dates.length) {
                 const earliest = new Date(Math.min(...dates));
                 const latest = new Date(Math.max(...dates));
-                dateRange = `${earliest.toLocaleDateString()} - ${latest.toLocaleDateString()}`;
+                dateRange = `${earliest.toLocaleDateString()} – ${latest.toLocaleDateString()}`;
             }
 
+            const countHtml = isFiltered
+                ? `<span class="stat-item" style="font-size:1rem;">
+                       <strong style="color:#667eea;font-size:1.2rem;">${filteredData.length.toLocaleString()}</strong>
+                       <span style="color:#888;"> / ${tabData.length.toLocaleString()} leads</span>
+                   </span>`
+                : `<span class="stat-item" style="font-size:1rem;">
+                       <strong style="font-size:1.2rem;">${tabData.length.toLocaleString()}</strong> leads
+                   </span>`;
+
             bar.innerHTML = `
-                <span class="stat-item"><strong>${data.length}</strong> total leads</span>
-                <span class="stat-item">Avg: <strong>$${Math.round(avgPrice).toLocaleString()}</strong></span>
-                <span class="stat-item">Range: <strong>$${Math.round(minPrice).toLocaleString()}</strong> - <strong>$${Math.round(maxPrice).toLocaleString()}</strong></span>
+                ${countHtml}
+                ${prices.length ? `<span class="stat-item">Avg: <strong>$${Math.round(avgPrice).toLocaleString()}</strong></span>` : ''}
+                ${prices.length ? `<span class="stat-item">Range: <strong>$${Math.round(minPrice).toLocaleString()}</strong> – <strong>$${Math.round(maxPrice).toLocaleString()}</strong></span>` : ''}
                 ${dateRange ? `<span class="stat-item">Dates: <strong>${dateRange}</strong></span>` : ''}
             `;
+        }
+
+        // ---- Investor signal detection ----
+        // Returns {type, label} or null
+        function getSignal(name) {
+            if (!name || name === 'N/A') return null;
+            const n = name.toUpperCase();
+
+            // LLC / Corp / Inc
+            if (/\b(LLC|L\.L\.C|INC|CORP|CORPORATION|LTD|L\.P\.|LLP|PLLC)\b/.test(n))
+                return { type: 'llc', label: 'LLC/Corp' };
+
+            // Trust / Estate
+            if (/\b(TRUST|TRUSTEE|ESTATE|HEIR|LIVING TR|REV TR|REVOCABLE|IRREVOCABLE)\b/.test(n))
+                return { type: 'trust', label: 'Trust/Estate' };
+
+            // Multi-unit / investor keywords
+            if (/\b(PROPERTIES|HOLDINGS|INVESTMENTS|VENTURES|REALTY|RENTALS|APARTMENTS|PARTNERS|GROUP|CAPITAL|FUND|ASSETS|MANAGEMENT|MGMT|EQUIT)\b/.test(n))
+                return { type: 'investor', label: 'Investor' };
+
+            return null;
+        }
+
+        // Signal = which chips are active
+        const activeSignals = new Set();
+
+        function toggleSignal(key) {
+            if (activeSignals.has(key)) activeSignals.delete(key);
+            else activeSignals.add(key);
+            document.getElementById('chip-' + key).classList.toggle('active', activeSignals.has(key));
+            currentPage = 1;
+            applyFilters();
+        }
+
+        function matchesSignalFilters(row) {
+            if (activeSignals.size === 0) return true;
+            const sig = getSignal(row.ownerName);
+            const pt = (row.propertyType || '').toLowerCase();
+
+            // multi-unit check — property type based
+            if (activeSignals.has('multi') &&
+                (pt.includes('multi') || pt.includes('duplex') || pt.includes('two-flat') || pt.includes('three-flat') || pt.includes('apartment')))
+                return true;
+
+            // name-based signals
+            if (!sig) return false;
+            if (activeSignals.has('llc') && sig.type === 'llc') return true;
+            if (activeSignals.has('trust') && sig.type === 'trust') return true;
+            if (activeSignals.has('investor') && sig.type === 'investor') return true;
+
+            return false;
         }
 
         // ---- Filtering ----
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const priceRange = document.getElementById('priceFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
 
             const sourceData = activeCounty === 'all' ? allData : countyData[activeCounty] || [];
 
@@ -338,7 +597,13 @@
                     }
                 }
 
-                return matchesSearch && matchesPrice;
+                // Property Type
+                const matchesType = !typeFilter || row.propertyType === typeFilter;
+
+                // Investor signals
+                const matchesSignal = matchesSignalFilters(row);
+
+                return matchesSearch && matchesPrice && matchesType && matchesSignal;
             });
 
             if (currentSortColumn >= 0) {
@@ -349,8 +614,9 @@
         }
 
         function attachListeners() {
-            document.getElementById('searchInput').addEventListener('input', applyFilters);
-            document.getElementById('priceFilter').addEventListener('change', applyFilters);
+            document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; applyFilters(); });
+            document.getElementById('priceFilter').addEventListener('change', () => { currentPage = 1; applyFilters(); });
+            document.getElementById('typeFilter').addEventListener('change', () => { currentPage = 1; applyFilters(); });
             document.getElementById('exportBtn').addEventListener('click', exportToCSV);
 
             document.querySelectorAll('th.sortable').forEach(header => {
@@ -365,6 +631,7 @@
                         currentSortDirection = 'asc';
                     }
 
+                    currentPage = 1;
                     document.querySelectorAll('th.sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
                     header.classList.add(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
 
@@ -383,6 +650,7 @@
                     case 1: va = a.address.toLowerCase(); vb = b.address.toLowerCase(); break;
                     case 2: va = parsePrice(a.price); vb = parsePrice(b.price); break;
                     case 3: va = parseDate(a.soldDate); vb = parseDate(b.soldDate); break;
+                    case 4: va = (a.propertyType || '').toLowerCase(); vb = (b.propertyType || '').toLowerCase(); break;
                     default: return 0;
                 }
                 if (va < vb) return currentSortDirection === 'asc' ? -1 : 1;
@@ -395,30 +663,63 @@
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             const countEl = document.getElementById('recordCount');
+            const totalEl = document.getElementById('totalCount');
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
 
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-tab">
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / pageSize) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * pageSize;
+            const end = Math.min(start + pageSize, totalRecords);
+            const pageData = filteredData.slice(start, end);
+
+            totalEl.textContent = totalRecords;
+
+
+            if (totalRecords === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-tab">
                     <h5>No leads found</h5>
                     <p>Try adjusting your filters or run the pipeline from the Admin panel.</p>
                 </td></tr>`;
                 countEl.textContent = '0';
+                pageInfo.textContent = 'Page 0 of 0';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                updateStats();
                 return;
             }
 
-            countEl.textContent = filteredData.length;
+            countEl.textContent = `${start + 1}-${end}`;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+
             const fragment = document.createDocumentFragment();
 
-            filteredData.forEach(row => {
+            pageData.forEach(row => {
                 const tr = document.createElement('tr');
 
-                // Owner Name
+                // Owner Name + investor signal badge
                 const td0 = document.createElement('td');
-                td0.textContent = row.ownerName;
+                const sig = getSignal(row.ownerName);
+                if (sig) {
+                    td0.innerHTML = `${row.ownerName} <span class="signal-badge signal-${sig.type}">${sig.label}</span>`;
+                } else {
+                    td0.textContent = row.ownerName;
+                }
                 tr.appendChild(td0);
 
                 // Address
                 const td1 = document.createElement('td');
-                td1.textContent = row.address;
+                if (row.address && row.address !== 'N/A') {
+                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(row.address)}`;
+                    td1.innerHTML = `${row.address} <a href="${mapsUrl}" target="_blank" title="Open in Google Maps" style="color:#667eea;font-size:0.85rem;text-decoration:none;white-space:nowrap;">&#x1F4CD;</a>`;
+                } else {
+                    td1.textContent = row.address;
+                }
                 tr.appendChild(td1);
 
                 // Price
@@ -435,28 +736,39 @@
                 }
                 tr.appendChild(td3);
 
-                // Agent Phone
+                // Property Type
                 const td4 = document.createElement('td');
-                td4.textContent = row.agentPhone || 'N/A';
+                const pt = row.propertyType || 'N/A';
+                if (pt !== 'N/A') {
+                    td4.innerHTML = `<span class="prop-type-badge prop-type-${pt.toLowerCase().replace(/[^a-z]/g,'-')}">${pt}</span>`;
+                } else {
+                    td4.textContent = 'N/A';
+                }
                 tr.appendChild(td4);
+
+                // Agent Phone
+                const td5 = document.createElement('td');
+                td5.textContent = row.agentPhone || 'N/A';
+                tr.appendChild(td5);
 
                 fragment.appendChild(tr);
             });
 
             tbody.innerHTML = '';
             tbody.appendChild(fragment);
+            updateStats();
         }
 
         // ---- Export ----
         function exportToCSV() {
             if (filteredData.length === 0) { alert('No data to export'); return; }
             const countyLabel = activeCounty === 'all' ? 'all_counties' : activeCounty.toLowerCase();
-            const headers = ['Owner Name', 'County', 'Address', 'Price', 'Sold Date', 'Agent Phone'];
+            const headers = ['Owner Name', 'County', 'Address', 'Price', 'Sold Date', 'Property Type', 'Agent Phone'];
             let csv = headers.join(',') + '\n';
             filteredData.forEach(row => {
                 csv += [
                     `"${row.ownerName}"`, `"${row.county}"`, `"${row.address}"`,
-                    `"${row.price}"`, `"${row.soldDate}"`, `"${row.agentPhone}"`
+                    `"${row.price}"`, `"${row.soldDate}"`, `"${row.propertyType || 'N/A'}"`, `"${row.agentPhone}"`
                 ].join(',') + '\n';
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -495,6 +807,25 @@
         function parseDate(d) {
             if (!d || d === 'N/A') return new Date(0);
             return new Date(d);
+        }
+
+        // ---- Pagination ----
+        function changePageSize(newSize) {
+            pageSize = parseInt(document.getElementById('pageSize').value);
+            currentPage = 1;
+            renderTable();
+        }
+
+        function changePage(delta) {
+            const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+            currentPage = Math.max(1, Math.min(totalPages, currentPage + delta));
+            renderTable();
+            document.querySelector('.table-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetPage() {
+            currentPage = 1;
+            renderTable();
         }
     </script>
 
