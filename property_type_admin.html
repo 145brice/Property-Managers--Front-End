@@ -137,8 +137,8 @@
         </div>
         <div class="d-flex align-items-center gap-3">
             <span id="progressLabel" class="small text-muted"></span>
-            <button id="enrichBtn" class="btn btn-run" onclick="enrichSelected()" disabled>Enrich Selected (0)</button>
-            <button id="killBtn" class="btn btn-danger" onclick="killEnrich()" style="display:none; font-size:1.1rem; padding:0.75rem 1.5rem;">Kill</button>
+            <button id="enrichBtn" class="btn btn-run" onclick="enrichSelected()" disabled>Enrich (0)</button>
+            <button id="killBtn" class="btn btn-danger" onclick="killEnrich()" style="font-size:1.1rem; padding:0.75rem 1.5rem;" disabled>Kill</button>
         </div>
     </div>
 </div>
@@ -252,6 +252,40 @@ let allLeads = [];       // full parsed CSV
 let displayedLeads = []; // after filter
 let propertyTypes = {};  // address -> type from cache
 let pollTimer = null;
+let lastCsvFile = '';
+
+function normalizeCountyName(name) {
+    const raw = String(name || '').trim();
+    if (!raw) return '';
+    return raw
+        .replace(/\s+county\b/i, '')
+        .replace(/,\s*[A-Z]{2}\b/, '')
+        .trim()
+        .toLowerCase();
+}
+
+function normalizeAddress(addr) {
+    return String(addr || '').trim().replace(/\s+/g, ' ').toUpperCase();
+}
+
+function normalizeTypeValue(value) {
+    return String(value || '').trim();
+}
+
+function isMissingPropertyType(value) {
+    const t = normalizeTypeValue(value).toLowerCase();
+    return !t || ['n/a', 'na', 'unknown', '-', '--', 'null', 'undefined'].includes(t);
+}
+
+function getPropertyTypeForRow(row) {
+    const addr = row && row['Address'];
+    return normalizeTypeValue(
+        propertyTypes[addr] ||
+        propertyTypes[normalizeAddress(addr)] ||
+        (row && row['Property Type']) ||
+        ''
+    );
+}
 
 // ── CSV parser ──────────────────────────────────────────────────────────────
 function parseCSV(text) {
@@ -296,6 +330,7 @@ async function loadLeads() {
         selectMissing(); // auto-select all rows that don't have a type yet
         document.getElementById('loadStats').textContent =
             `${allLeads.length.toLocaleString()} total records loaded.`;
+        await syncEnrichStateOnLoad();
     } catch(e) {
         document.getElementById('loadStats').textContent = 'Error loading leads: ' + e.message;
     }
@@ -308,14 +343,14 @@ function applyFiltersAndRender() {
 
     const enabledCounties = new Set(
         [...document.querySelectorAll('.county-toggle.active:not(.toggle-all)')]
-            .map(el => el.dataset.county)
+            .map(el => normalizeCountyName(el.dataset.county))
     );
 
     displayedLeads = allLeads.filter(row => {
-        if (!enabledCounties.has(row['County'])) return false;
+        if (!enabledCounties.has(normalizeCountyName(row['County']))) return false;
         const soldDate = parseSoldDate(row['Sold Date']);
         if (soldDate < cutoff) return false;
-        const hasType = !!propertyTypes[row['Address']];
+        const hasType = !isMissingPropertyType(getPropertyTypeForRow(row));
         if (showFilter === 'missing' && hasType) return false;
         if (showFilter === 'hastype' && !hasType) return false;
         return true;
@@ -337,11 +372,12 @@ function renderTable() {
 
     tbody.innerHTML = displayedLeads.map((row, i) => {
         const addr = row['Address'];
-        const ptype = propertyTypes[addr] || '';
-        const badgeHtml = ptype ? `<span class="type-badge ${typeBadgeClass(ptype)}">${ptype}</span>` : '<span class="type-badge type-unk">—</span>';
-        const rowClass = ptype ? 'has-type' : '';
+        const ptype = getPropertyTypeForRow(row);
+        const hasType = !isMissingPropertyType(ptype);
+        const badgeHtml = hasType ? `<span class="type-badge ${typeBadgeClass(ptype)}">${ptype}</span>` : '<span class="type-badge type-unk">Unknown</span>';
+        const rowClass = hasType ? 'has-type' : '';
         return `<tr class="${rowClass}" data-idx="${i}">
-            <td><input type="checkbox" class="row-check" data-addr="${escHtml(addr)}" onchange="updateSelCount()"></td>
+            <td><input type="checkbox" class="row-check" data-addr="${escHtml(addr)}" data-county="${escHtml(row['County'])}" onchange="updateSelCount()"></td>
             <td>${escHtml(row['Owner Name'] || 'N/A')}</td>
             <td>${escHtml(row['County'])}</td>
             <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(addr)}">${escHtml(addr)}</td>
@@ -372,14 +408,15 @@ function updateSelCount() {
     document.getElementById('selCount').innerHTML = `<strong>${n}</strong> selected`;
     const btn = document.getElementById('enrichBtn');
     btn.disabled = n === 0 || enrich_running;
-    btn.textContent = `Enrich Selected (${n})`;
+    btn.textContent = `Enrich (${n})`;
 }
 
 function selectAll()     { document.querySelectorAll('.row-check').forEach(c => c.checked = true); updateSelCount(); }
 function selectNone()    { document.querySelectorAll('.row-check').forEach(c => c.checked = false); updateSelCount(); }
 function selectMissing() {
     document.querySelectorAll('.row-check').forEach(c => {
-        c.checked = !propertyTypes[c.dataset.addr];
+        const row = displayedLeads.find(r => normalizeAddress(r['Address']) === normalizeAddress(c.dataset.addr));
+        c.checked = !row || isMissingPropertyType(getPropertyTypeForRow(row));
     });
     updateSelCount();
 }
@@ -391,11 +428,15 @@ function toggleCheckAll(cb) {
 // ── County toggles ────────────────────────────────────────────────────────────
 function toggleCounty(el) {
     el.classList.toggle('active');
+    applyFiltersAndRender();
+    selectMissing();
 }
 function toggleAllCounties(btn) {
     const toggles = document.querySelectorAll('.county-toggle:not(.toggle-all)');
     const allActive = [...toggles].every(t => t.classList.contains('active'));
     toggles.forEach(t => allActive ? t.classList.remove('active') : t.classList.add('active'));
+    applyFiltersAndRender();
+    selectMissing();
 }
 
 // ── Enrich ────────────────────────────────────────────────────────────────────
@@ -403,11 +444,13 @@ let enrich_running = false;
 
 async function enrichSelected() {
     const checked = [...document.querySelectorAll('.row-check:checked')];
-    const addresses = checked.map(c => c.dataset.addr);
+    const addresses = checked
+        .map(c => ({ address: c.dataset.addr, county: c.dataset.county || '' }))
+        .filter(x => x.address);
     if (!addresses.length) return;
 
     if (addresses.length > 200) {
-        if (!confirm(`You have ${addresses.length.toLocaleString()} addresses selected.\n\nAt ~1.5s each, this will take ~${Math.round(addresses.length*1.5/60)} minutes.\n\nConsider using "Select Without Type" on a smaller date range.\n\nContinue anyway?`)) return;
+        if (!confirm(`You have ${addresses.length.toLocaleString()} addresses selected.\n\nThis will use Google metadata/snippets for every selected Unknown row and may take several minutes.\n\nContinue?`)) return;
     }
 
     try {
@@ -426,7 +469,9 @@ async function enrichSelected() {
 
         enrich_running = true;
         document.getElementById('enrichBtn').disabled = true;
-        document.getElementById('killBtn').style.display = 'inline-block';
+        const killBtn = document.getElementById('killBtn');
+        killBtn.disabled = false;
+        killBtn.textContent = 'Kill';
         document.getElementById('progressBar').style.display = 'block';
         document.getElementById('logBox').textContent = '';
         startPolling();
@@ -438,6 +483,33 @@ async function enrichSelected() {
 function startPolling() {
     if (pollTimer) clearInterval(pollTimer);
     pollTimer = setInterval(pollStatus, 2000);
+}
+
+async function syncEnrichStateOnLoad() {
+    try {
+        const resp = await fetch('/api/enrich-status');
+        const s = await resp.json();
+        if (s.running) {
+            enrich_running = true;
+            document.getElementById('statusDot').className = 'status-dot dot-running';
+            document.getElementById('statusText').textContent = 'Running';
+            document.getElementById('statusDetail').textContent = s.current ? `→ ${s.current}` : '';
+            const killBtn = document.getElementById('killBtn');
+            killBtn.disabled = false;
+            killBtn.textContent = 'Kill';
+            document.getElementById('progressBar').style.display = 'block';
+            document.getElementById('logBox').textContent = s.log || '';
+            startPolling();
+        } else {
+            enrich_running = false;
+            const killBtn = document.getElementById('killBtn');
+            killBtn.disabled = true;
+            killBtn.textContent = 'Kill';
+        }
+        updateSelCount();
+    } catch (e) {
+        console.error('sync state error:', e);
+    }
 }
 
 async function pollStatus() {
@@ -458,6 +530,10 @@ async function pollStatus() {
             text.textContent = 'Done';
             detail.textContent = `${s.done} / ${s.total} addresses`;
         }
+        if (s.csv_file) {
+            lastCsvFile = s.csv_file;
+            detail.textContent += ` | CSV: ${s.csv_file}`;
+        }
 
         // progress bar
         const pct = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
@@ -471,17 +547,17 @@ async function pollStatus() {
 
         // update type cells as results come in
         if (s.log) {
-            const matches = s.log.matchAll(/\[\d+\/\d+\] (.+?)  →  (.+)/g);
+            const matches = s.log.matchAll(/\[\d+\/\d+\] (.+?)\s{2}<-\s{2}(.+)/g);
             for (const m of matches) {
-                const addr = m[1].trim();
-                const ptype = m[2].trim();
+                const ptype = m[1].trim();
+                const addr = m[2].trim();
                 propertyTypes[addr] = ptype;
             }
             // re-render type cells only
             displayedLeads.forEach((row, i) => {
                 const cell = document.getElementById(`type-${i}`);
-                if (cell && propertyTypes[row['Address']]) {
-                    const ptype = propertyTypes[row['Address']];
+                const ptype = getPropertyTypeForRow(row);
+                if (cell && !isMissingPropertyType(ptype)) {
                     cell.innerHTML = `<span class="type-badge ${typeBadgeClass(ptype)}">${ptype}</span>`;
                     cell.closest('tr').classList.add('has-type');
                 }
@@ -491,8 +567,13 @@ async function pollStatus() {
         if (!s.running) {
             clearInterval(pollTimer);
             enrich_running = false;
-            document.getElementById('killBtn').style.display = 'none';
+            const killBtn = document.getElementById('killBtn');
+            killBtn.disabled = true;
+            killBtn.textContent = 'Kill';
             updateSelCount();
+            if (lastCsvFile) {
+                document.getElementById('loadStats').textContent = `Live CSV saved: ${lastCsvFile}`;
+            }
         }
     } catch(e) {
         console.error('Poll error:', e);
@@ -500,8 +581,14 @@ async function pollStatus() {
 }
 
 async function killEnrich() {
-    await fetch('/api/enrich-kill', {method: 'POST'});
-    document.getElementById('killBtn').style.display = 'none';
+    const killBtn = document.getElementById('killBtn');
+    killBtn.disabled = true;
+    killBtn.textContent = 'Killing...';
+    try {
+        await fetch('/api/enrich-kill', {method: 'POST'});
+    } finally {
+        document.getElementById('statusText').textContent = 'Stopping...';
+    }
 }
 
 // Auto-load on page open
